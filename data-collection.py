@@ -6,6 +6,7 @@ import glob
 from vision import get_roi, screenshot
 import matplotlib.pyplot as plt
 from pynput import keyboard
+from pynput.keyboard import Key, Controller
 import random
 
 window = [0, 0, 1920, 1080]
@@ -21,18 +22,17 @@ def on_press(key):
     try:
         if key.char == 'q':
             exit(0)
-        if key.char == 'p':
+        if key.char == 'v':
             print('person')
             img = screenshot(roi)
             img.save(human_dir + img_name)
-        if key.char == 'o':
+        if key.char == 'b':
             print('other')
             img = screenshot(roi)
             img.save(other_dir + img_name)
 
     except AttributeError:
-        print('special key')
-
+        return
 
 def on_release(key):
     if key == keyboard.Key.esc:

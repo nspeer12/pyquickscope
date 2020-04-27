@@ -53,15 +53,7 @@ def threader():
         q.task_done()
     
 
-def get_roi(window, n):
-    n = n/2
-    # returns n by n region of interest in the center of the screen
-    xdiff = window[2] - window[0]
-    ydiff = window[3] - window[1]
-    xcenter = xdiff / 2
-    ycenter = ydiff / 2
-    roi =  [int(xcenter - n), int(ycenter - n), int(xcenter + n), int(ycenter + n)]
-    return roi
+
 
 
 def get_coords(window, objectRegion, n):
