@@ -13,6 +13,7 @@ config = tf.compat.v1.ConfigProto()
 config.gpu_options.allow_growth = True
 sess = tf.compat.v1.Session(config=config)
 
+# data paths
 base_dir = 'data\\'
 train_dir = os.path.join(base_dir, 'train')
 validation_dir = os.path.join(base_dir, 'validation')
@@ -23,8 +24,9 @@ validation_other_dir = os.path.join(validation_dir, 'other')
 
 # model paths
 model_dir = os.path.dirname('models\\')
-checkpoint_path = os.path.join(model_dir, 'checkpoints/')
-log_dir = os.path.join(base_dir, 'logs\\')
+checkpoint_path = os.path.join(model_dir, 'checkpoints\\')
+log_dir = os.path.dirname('logs\\')
+
 
 def create_model():
     conv_base = Xception(weights='imagenet', include_top=False, input_shape=(300, 300, 3))
@@ -55,31 +57,35 @@ def train(model):
                                                                   batch_size=20, class_mode='binary')
     
     # checkpoints
-    checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(filepath=checkpoint_path, save_weights_only=True, verbose=1)
+    ckpt_path = checkpoint_path + 'backup.ckpt'
+    checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(filepath=ckpt_path, save_weights_only=True,
+                                                             verbose=1)
 
     # tensorboard
-    log = log_dir + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
-    tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log, histogram_freq=10)
+    tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1, update_freq='epoch')
 
     # callbacks
     callbacks = [checkpoint_callback, tensorboard_callback]
 
     # train
-    history = model.fit_generator(train_generator, steps_per_epoch=25, epochs=10,
+    history = model.fit_generator(train_generator, steps_per_epoch=25, epochs=1,
                                   validation_data=validation_generator, validation_steps=25,
                                   callbacks=callbacks)
 
     return model
 
 
-def data_loader():
-    #classes = np.array([item.name for item in train_dir.glob('*')])
-    print(glob.glob(train_dir + str('*')))
-    #print(classes)
+def load_model(checkpoint_path):
+    model = create_model()
+    model.load_weights(checkpoint_path)
+    return model
+
 
 def main():
     model = create_model()
-    train(model)
+    model = train(model)
+    model = load_model(checkpoint_path + 'backup.ckpt')
+    model = train(model)
 
 if __name__=='__main__':
     main()
