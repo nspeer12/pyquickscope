@@ -1,7 +1,6 @@
 import os
 import cv2
 import glob
-from pynput import keyboard
 import time
 import shutil
 import random
@@ -9,10 +8,11 @@ import random
 # base directories
 data_dir = 'data\\'
 raw_dir = os.path.join(data_dir, 'raw\\')
+rubbish_dir = os.path.join(raw_dir, 'rubbish\\')
 train_dir = os.path.join(data_dir, 'train\\')
 val_dir = os.path.join(data_dir, 'validation\\')
 is_player_dir = os.path.join(train_dir, 'player\\')
-is_other_dir = os.path.joing(train_dir, 'other\\')
+is_other_dir = os.path.join(train_dir, 'other\\')
 
 # data filtering directories
 raw_player_dir = os.path.join(raw_dir, 'player\\')
@@ -40,19 +40,27 @@ def human_in_the_loop_labeling(classes=['player', 'other']):
 
         # label image and move file
         if key == ord('b'):
-           # label as other
-           shutil.move(f, os.path.join(is_other_dir, new_name))
-            print(f, ' labeled as other')
+            # label as other
+            new_path = os.path.join(is_other_dir, new_name)
+            shutil.move(f, new_path)
+            print(f, ' labeled as other and moved to ', new_path)
 
         elif key == ord('v'):
             # label as player
-            shutil.move(f, os.path.join(is_player_dir, new_name))
-            print(f, ' labeled as player')
-            
+            new_path = os.path.join(is_player_dir, new_name)
+            shutil.move(f, new_path)
+            print(f, ' labeled as player', new_path)
+        
+        elif key == ord('n'):
+            # move to rubbish
+            new_path = os.path.join(rubbish_dir, new_name)
+            shutil.move(f, new_path)
+            print(f, ' moved to rubbish ', new_path)
+        
         elif key == ord('q'):
             break
 
-        cv2.destroyAllWindows()    
+        cv2.destroyAllWindows()
 
 def main():
     human_in_the_loop_labeling()

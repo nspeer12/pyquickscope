@@ -13,8 +13,8 @@ window = [0, 0, 1920, 1080]
 n = 300
 roi = get_roi(window, n)
 
-other_dir = "data\\other\\"
-human_dir = "data\\human\\"
+other_dir = "data\\raw\\fresh-other\\"
+human_dir = "data\\raw\\human\\"
 
 def on_press(key):
     img_name = str(random.randint(0, 999999)) + '.jpg'
@@ -42,7 +42,6 @@ def on_release(key):
 
 if __name__=='__main__':
     # define window and region
-    
     
     # create keyboard listener
     with keyboard.Listener(
