@@ -31,7 +31,7 @@ log_dir = os.path.dirname('logs\\')
 class Model(tf.keras.models.Sequential):
     def __init__(self, output_layers=[], learning_rate=2e-5, epochs=100):
         super(Model, self).__init__()
-        self.file_name = 'Xception' + str(epochs) + '.epochs.' + str(learning_rate) + '.lr.' 
+        self.file_name = 'Xception' + str(epochs) + '-epochs.' + str(learning_rate) + '.lr' 
         self.epochs = epochs
         # add convolutional base
         conv_base = Xception(weights='imagenet', include_top=False, input_shape=(300, 300, 3))
@@ -80,52 +80,21 @@ class Model(tf.keras.models.Sequential):
                                     callbacks=callbacks)
 
 
-        model.save(os.path.join(model_dir, self.file_name))
+        self.save(os.path.join(model_dir, self.file_name))
 
-    def load_model(checkpoint_path):
-        model = create_model()
-        model.load_weights(checkpoint_path)
-        return model
+
+def load_model(model_path):
+    model = tf.keras.models.load_model(model_path)
+    return model
+
 
 def main():
-    model = Model(output_layers=[32], epochs=100)
-    model.train()
-
-    model = Model(output_layers=[64], epochs=100)
-    model.train()
-
-    model = Model(output_layers=[128], epochs=100)
-    model.train()
-
-    model = Model(output_layers=[256], epochs=100)
-    model.train()
-
-    model = Model(output_layers=[512], epochs=100)
-    model.train()
-
-    model = Model(output_layers=[1024], epochs=100)
-    model.train()
-
-    # two output layers
-    model = Model(output_layers=[32, 8], epochs=100)
-    model.train()
-
-    model = Model(output_layers=[64, 8], epochs=100)
-    model.train()
-
-    model = Model(output_layers=[128, 8], epochs=100)
-    model.train()
-
-    model = Model(output_layers=[256, 8], epochs=100)
-    model.train()
-
-    model = Model(output_layers=[512, 8], epochs=100)
-    model.train()
-
-    model = Model(output_layers=[1024, 8], epochs=100)
-    model.train()
-
-    print('done')
+    
+    layers = [[512, 128, 32], [512, 256, 32], [256, 128, 32], [512, 128, 64]]
+    
+    for layer in layers:
+        model = Model(output_layers=layer, epochs=500)
+        model.train()
 
 if __name__=='__main__':
     main()
