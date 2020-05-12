@@ -2,10 +2,8 @@ import cv2
 import sys
 import time
 import numpy as np
-import asyncio
 import matplotlib.pyplot as plt
 from PIL import ImageGrab
-
 
 def get_roi(window, n):
     n = n/2
@@ -20,7 +18,6 @@ def get_roi(window, n):
 
 def screenshot(roi):
     return ImageGrab.grab(bbox=roi)
-
 
 def fps(t1):
     t2 = time.time()

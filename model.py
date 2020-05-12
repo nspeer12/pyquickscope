@@ -29,19 +29,19 @@ log_dir = os.path.dirname('logs\\')
 
 
 class Model(tf.keras.models.Sequential):
-    def __init__(self, output_layers=[], learning_rate=2e-5, epochs=100):
+    def __init__(self, hidden_layers=[], learning_rate=2e-5, epochs=100):
         super(Model, self).__init__()
-        self.file_name = 'Xception' + str(epochs) + '-epochs.' + str(learning_rate) + '.lr' 
+        self.file_name = 'MobileNet.' + str(epochs) + '_epochs.' + str(learning_rate) + '_lr'
         self.epochs = epochs
         # add convolutional base
-        conv_base = Xception(weights='imagenet', include_top=False, input_shape=(300, 300, 3))
+        conv_base = MobileNetV2(weights='imagenet', include_top=False, input_shape=(300, 300, 3))
         conv_base.trainable = True
 
         self.add(conv_base)
         self.add(keras.layers.Flatten())
         
-        # output layers
-        for layer_dim in output_layers:
+        # hidden layers
+        for layer_dim in hidden_layers:
             self.add(keras.layers.Dense(layer_dim, activation='relu'))
             self.file_name = self.file_name + '_' + str(layer_dim)
 
@@ -90,11 +90,14 @@ def load_model(model_path):
 
 def main():
     
-    layers = [[512, 128, 32], [512, 256, 32], [256, 128, 32], [512, 128, 64]]
+    #layers = [[512, 128, 32], [512, 256, 32], [256, 128, 32], [512, 128, 64]]
     
-    for layer in layers:
-        model = Model(output_layers=layer, epochs=500)
-        model.train()
+    #for layer in layers:
+        #model = Model(output_layers=layer, epochs=500)
+        #model.train()
+
+    model = Model(epochs=100)
+    model.train()
 
 if __name__=='__main__':
     main()
