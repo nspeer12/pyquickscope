@@ -9,7 +9,7 @@ from vision import *
 from controller import *
 import glob
 
-model_file = 'models\\MobileNet100_epochs.2e-05_lr'
+model_file = 'models\\MobileNet.250_epochs.2e-05_lr'
 classes_dir = 'data\\test\\*'
 
 raw_player = 'data\\raw\\player\\'
@@ -80,7 +80,7 @@ def screen_detection(confidence=0.7):
             record = False
 
 
-def first_person_shooter(confidence=0.7, mode=1):
+def first_person_shooter(confidence=0.5, mode=1):
     print('loading model ', model_file, '. This may take a minute.')
     model = load_model(model_file)
     
@@ -111,9 +111,10 @@ def first_person_shooter(confidence=0.7, mode=1):
             # save captured data
             img.save(raw_player + img_name)
 
+
         # fps counter
         t2 = time.time()
-        print('Prediction: ', pred_class, '\tFPS: ', 1/(t2-t1))
+        print('Prediction: ', pred_class, pred, '\tFPS: ', 1/(t2-t1))
 
         # display image
         cv2.imshow('frame', np.array(img))
@@ -124,7 +125,7 @@ def first_person_shooter(confidence=0.7, mode=1):
             record = False
 
 def main():
-    first_person_shooter(mode=3)
+    first_person_shooter(mode=1)
 
 
 if __name__ == '__main__':
