@@ -1,5 +1,6 @@
 import pyautogui
 import time
+
 def click(x, y):
     pyautogui.click(x, y)
 
@@ -9,8 +10,11 @@ def get_position():
 
 def quickscope(x, y):
     # hold right for 1 second
-    aim(1, x, y)
+    aim(1, 0, 0)
+    time.sleep(0.5)
     pyautogui.click(button='left')
+    pyautogui.click(button='right')
+    time.sleep(0.5)
     #pyautogui.mouseUp()
 
 
